@@ -1,50 +1,27 @@
-/* 
-  通过js来动态添加rem 
-*/
-
-(function(designWidth, maxWidth) {
-	var doc = document,
-	win = window,
-	docEl = doc.documentElement,
-	remStyle = document.createElement("style"),
-	tid;
-
-	function refreshRem() {
-		var width = docEl.getBoundingClientRect().width;
-		maxWidth = maxWidth || 540;
-		width>maxWidth && (width=maxWidth);
-		var rem = width * 100 / designWidth;
-		remStyle.innerHTML = 'html{font-size:' + rem + 'px;}';
-	}
-
-	if (docEl.firstElementChild) {
-		docEl.firstElementChild.appendChild(remStyle);
-	} else {
-		var wrap = doc.createElement("div");
-		wrap.appendChild(remStyle);
-		doc.write(wrap.innerHTML);
-		wrap = null;
-	}
-	//要等 wiewport 设置好后才能执行 refreshRem，不然 refreshRem 会执行2次；
-	refreshRem();
-
-	win.addEventListener("resize", function() {
-		clearTimeout(tid); //防止执行两次
-		tid = setTimeout(refreshRem, 300);
-	}, false);
-
-	win.addEventListener("pageshow", function(e) {
-		if (e.persisted) { // 浏览器后退的时候重新计算
-			clearTimeout(tid);
-			tid = setTimeout(refreshRem, 300);
-		}
-	}, false);
-
-	if (doc.readyState === "complete") {
-		doc.body.style.fontSize = "16px";
-	} else {
-		doc.addEventListener("DOMContentLoaded", function(e) {
-			doc.body.style.fontSize = "16px";
-		}, false);
-	}
-})(375, 750); 
+(function () {
+    'use strict'
+    var ua = window.navigator.userAgent;
+    var docEl = document.documentElement;
+    var html = document.querySelector('html');
+    var isAndorid = /Android/i.test(ua);
+    var dpr = window.devicePixelRatio || 1;
+    var rem = docEl.clientWidth / 7.5;
+    // 设置 rem 基准值
+    html.style.fontSize = rem + 'px';
+    // Nexus 5 上 rem 值不准，
+    // 如：设置100px，getComputedStyle 中的值却为 85px，导致页面错乱
+    // 这时需要检查设置的值和计算后的值是否一样，
+    // 不一样的话重新设置正确的值
+    var getCPTStyle = window.getComputedStyle;
+    var fontSize = parseFloat(html.style.fontSize, 10);
+    var computedFontSize = parseFloat(getCPTStyle(html)['font-size'], 10);
+    if (getCPTStyle && Math.abs(fontSize - computedFontSize) >= 1) {
+        html.style.fontSize = fontSize * (fontSize / computedFontSize) + 'px';
+    }
+    // 设置 data-dpr 属性，留作的 css hack 之用
+    html.setAttribute('data-dpr', dpr);
+    // 安卓平台额外加上标记类
+    if (isAndorid) {
+        html.setAttribute('data-platform', 'android');
+    }
+})();

@@ -1,5 +1,5 @@
 {
-  "name": "rem",
+  "name": "rem-auto",
   "version": "1.0.0",
   "description": "移动端rem适配方案",
   "main": "rem.js",

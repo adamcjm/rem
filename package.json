@@ -1,0 +1,22 @@
+{
+  "name": "rem",
+  "version": "1.0.0",
+  "description": "移动端rem适配方案",
+  "main": "rem.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamcjm/rem.git"
+  },
+  "keywords": [
+    "rem"
+  ],
+  "author": "adamcjm@163.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adamcjm/rem/issues"
+  },
+  "homepage": "https://github.com/adamcjm/rem#readme"
+}
